@@ -1,0 +1,7 @@
+-------------------------------------------------------------------------------
+Test set: com.hcoarite.rest.api.SpringBootRestApiApplicationTests
+-------------------------------------------------------------------------------
+Tests run: 1, Failures: 0, Errors: 1, Skipped: 0, Time elapsed: 0.225 s <<< FAILURE! - in com.hcoarite.rest.api.SpringBootRestApiApplicationTests
+com.hcoarite.rest.api.SpringBootRestApiApplicationTests  Time elapsed: 0.224 s  <<< ERROR!
+java.lang.IllegalStateException: Unable to find a @SpringBootConfiguration, you need to use @ContextConfiguration or @SpringBootTest(classes=...) with your test
+
