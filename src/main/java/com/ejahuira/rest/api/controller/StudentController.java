@@ -1,8 +1,11 @@
 package com.ejahuira.rest.api.controller;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -13,37 +16,53 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import com.ejahuira.rest.api.entity.Student;
-import com.ejahuira.rest.api.service.StudentService;
+import com.ejahuira.rest.api.dto.StudentDto;
+import com.ejahuira.rest.api.model.Student;
+import com.ejahuira.rest.api.service.IStudentService;
+import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 
 @RestController
-@RequestMapping("/rest/student")
+@RequestMapping("/student")
+@RequiredArgsConstructor
 public class StudentController {
 
 	@Autowired
-	private StudentService studentService;
+	private IStudentService studentService;
+	
+	@Qualifier("studentMapper")
+	private ModelMapper mapper;
 		
 	@PostMapping("/save")
-	public ResponseEntity<Student> createStudent(@RequestBody Student student) {
-		
-		return new ResponseEntity<Student>(studentService.createStudent(student), HttpStatus.CREATED);
+	public ResponseEntity<StudentDto> createStudent(@Valid @RequestBody StudentDto dto) throws Exception{
+		Student obj = studentService.createStudent(convertToEntity(dto));
+        return new ResponseEntity<>(convertToDto(obj), HttpStatus.CREATED);
 	}
 	
 	@GetMapping("/list")
-	public ResponseEntity<List<Student>> getAllStudent(){
-		
-		return new ResponseEntity<List<Student>>(studentService.getAllStudent(), HttpStatus.OK);
+	public ResponseEntity<List<StudentDto>> getAllStudent()throws Exception{
+		List<StudentDto> list = studentService.getAllStudent().stream().map(this::convertToDto).collect(Collectors.toList());
+	    
+		return new ResponseEntity<>(list, HttpStatus.OK);
 	}
 	
 	@PutMapping("/edit/{id}")
-	public ResponseEntity<Student> updateStudent(@PathVariable("id") Integer id, @RequestBody Student student){
-		return new ResponseEntity<Student>(studentService.updateStudent(id, student), HttpStatus.OK);
+	public ResponseEntity<StudentDto> updateStudent(@Valid @PathVariable("id") Integer id,@Valid @RequestBody StudentDto dto) throws Exception{
+		Student obj = studentService.updateStudent(id, convertToEntity(dto));
+		return new ResponseEntity<StudentDto>(convertToDto(obj), HttpStatus.OK);
 	}
 	
 	@DeleteMapping("/delete/{id}")
-	public ResponseEntity<HttpStatus> deleteStudent(@PathVariable("id") Integer id){
+	public ResponseEntity<HttpStatus> deleteStudent(@Valid @PathVariable("id") Integer id)throws Exception{
 		studentService.deleteStudent(id);
 		return new ResponseEntity<HttpStatus>(HttpStatus.OK);
 	}
+	
+	private StudentDto convertToDto(Student obj) {
+        return mapper.map(obj, StudentDto.class);
+    }
+
+    private Student convertToEntity(StudentDto dto){
+        return mapper.map(dto, Student.class);
+    }
 }

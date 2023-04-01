@@ -5,10 +5,10 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.ejahuira.rest.api.entity.Student;
+import com.ejahuira.rest.api.model.Student;
 import com.ejahuira.rest.api.repository.StudentRepository;
 @Service
-public class StudentServiceImpl implements StudentService{
+public class StudentServiceImpl implements IStudentService{
 
 	@Autowired
 	private StudentRepository studentRepository;
@@ -34,7 +34,7 @@ public class StudentServiceImpl implements StudentService{
 	@Override
 	public void deleteStudent(Integer id) {
 		
-		studentRepository.deleteById(null);
+		studentRepository.deleteById(id);
 	}
 
 }

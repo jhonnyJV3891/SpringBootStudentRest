@@ -5,11 +5,11 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.ejahuira.rest.api.entity.Course;
+import com.ejahuira.rest.api.model.Course;
 import com.ejahuira.rest.api.repository.CourseRepository;
 
 @Service
-public class CourseServiceImpl implements CourseService{
+public class CourseServiceImpl implements ICourseService{
 
 	@Autowired
 	private CourseRepository courseRepository;
